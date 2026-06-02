@@ -1,0 +1,58 @@
+name: Piano Cene Settimanale
+
+on:
+  schedule:
+    # Ogni sabato alle 15:00 ora italiana (13:00 UTC in estate CEST, 14:00 UTC in inverno CET)
+    # Usiamo 13:00 UTC per coprire entrambi i fusi orari
+    - cron: "0 13 * * 6"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry-run (non invia email, usa calendario simulato)"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      start_date:
+        description: "Data inizio settimana (YYYY-MM-DD, vuoto = prossimo lunedì)"
+        required: false
+        default: ""
+
+jobs:
+  plan-dinners:
+    runs-on: ubuntu-latest
+    name: Genera e invia piano cene
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Installa dipendenze
+        run: pip install -r requirements.txt
+
+      - name: Esegui dinner planner
+        env:
+          GOOGLE_TOKEN_JSON: ${{ secrets.GOOGLE_TOKEN_JSON }}
+          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL || 'a.tummillo@gmail.com' }}
+        run: |
+          DRY_RUN="${{ github.event.inputs.dry_run || 'false' }}"
+          START_DATE="${{ github.event.inputs.start_date }}"
+
+          ARGS=""
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          if [ -n "$START_DATE" ]; then
+            ARGS="$ARGS --start-date $START_DATE"
+          fi
+
+          python -m dinner_planner.main $ARGS
