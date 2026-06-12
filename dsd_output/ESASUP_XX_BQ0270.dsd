@@ -1,0 +1,26 @@
+[DSD_File_Header]
+Current DSD version=4
+
+[DSD Component]
+DWG=C:\Users\stefano.fronda\Desktop\ESASUP_DWG\ESASUP_XX_BQ0270.dwg
+Layout=Layout2
+Setup=
+OriginalSheetPath=C:\Users\stefano.fronda\Desktop\ESASUP_DWG\ESASUP_XX_BQ0270.dwg
+HasPlotSettings=0
+SheetName=ESASUP_XX_BQ0270
+
+[Plot Device]
+PlotToFile=1
+PC3File=DWG To PDF.pc3
+PaperSize=ISO_expand_A1_(841.00_x_594.00_MM)
+PlotStyle=monochrome.ctb
+UseLastPlotSettings=0
+
+[DSD Data]
+SheetCount=1
+PromptForDWFName=0
+IncludeLayer=0
+LineMerge=0
+OutputType=5
+OUT=C:\Users\stefano.fronda\Desktop\ESASUP_DWG\ESASUP_XX_BQ0270.pdf
+PWD=
